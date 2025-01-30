@@ -13,5 +13,5 @@ Problem 3: ✔
     1. Result is not showing properly when time gets over while typing.
 
 
-Problem 4: ❌
+Problem 4: ✔
     1. Accuracy is not showing properly when I type complete before typing.

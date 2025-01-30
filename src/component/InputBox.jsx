@@ -10,13 +10,27 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
   useEffect(() => {
     if (timeLeft === 0 && !typingStopped) {
       setTypingStopped(true);
+      
+      let finalCorrect = correctCharacters;
+      let finalIncorrect = incorrectCharacters;
+
+      // Process current input if there's an active word
+      if (currentWordIndex < words.length) {
+        const currentWord = words[currentWordIndex];
+        const trimmedInput = userInput.trim();
+        const { correctChars, incorrectChars } = calculateCharacterCounts(trimmedInput, currentWord);
+        
+        finalCorrect += correctChars;
+        finalIncorrect += incorrectChars;
+      }
+
       const totalChars = words.reduce((sum, word) => sum + word.length, 0);
-      onComplete(correctCharacters, incorrectCharacters, totalChars);
+      onComplete(finalCorrect, finalIncorrect, totalChars);
     }
-  }, [timeLeft, typingStopped, correctCharacters, incorrectCharacters, onComplete, words]);
+  }, [timeLeft, typingStopped, correctCharacters, incorrectCharacters, onComplete, words, currentWordIndex, userInput]);
 
   const handleInputChange = (e) => {
-    if (timeLeft === 0) return; // Stop typing when time is over
+    if (timeLeft === 0) return;
 
     const inputValue = e.target.value;
     setUserInput(inputValue);
@@ -39,7 +53,6 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
     }
 
     incorrectChars += Math.max(0, trimmedInput.length - currentWord.length);
-
     return { correctChars, incorrectChars };
   };
 
@@ -47,27 +60,33 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
     if (e.key === " " && timeLeft > 0) {
       e.preventDefault();
 
+      // Prevent processing if no words left
+      if (currentWordIndex >= words.length) return;
+
       const trimmedInput = userInput.trim();
       const currentWord = words[currentWordIndex];
+      let correctChars = 0;
+      let incorrectChars = 0;
 
       if (trimmedInput.length > 0) {
-        const { correctChars, incorrectChars } = calculateCharacterCounts(
-          trimmedInput,
-          currentWord
-        );
-
-        setCorrectCharacters((prev) => prev + correctChars);
-        setIncorrectCharacters((prev) => prev + incorrectChars);
+        const counts = calculateCharacterCounts(trimmedInput, currentWord);
+        correctChars = counts.correctChars;
+        incorrectChars = counts.incorrectChars;
+        setCorrectCharacters(prev => prev + correctChars);
+        setIncorrectCharacters(prev => prev + incorrectChars);
       }
 
       const isLastWord = currentWordIndex + 1 >= words.length;
 
+      // Immediately calculate totals including current word
       if (isLastWord) {
         const totalChars = words.reduce((sum, word) => sum + word.length, 0);
-        onComplete(correctCharacters, incorrectCharacters, totalChars);
+        const totalCorrect = correctCharacters + correctChars;
+        const totalIncorrect = incorrectCharacters + incorrectChars;
+        onComplete(totalCorrect, totalIncorrect, totalChars);
       }
 
-      setCurrentWordIndex((prev) => prev + 1);
+      setCurrentWordIndex(prev => prev + 1);
       setUserInput("");
     }
   };
@@ -89,7 +108,7 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
         value={userInput}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        disabled={timeLeft === 0} // Disable input when time is over
+        disabled={timeLeft === 0 || currentWordIndex >= words.length}
         className="p-3 w-full bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors text-lg"
         placeholder="Start typing here..."
       />

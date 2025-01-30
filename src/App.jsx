@@ -16,7 +16,7 @@ const wordsList = [
 
 const App = () => {
   const [words, setWords] = useState(wordsList);
-  const [time, setTime] = useState(25);
+  const [time, setTime] = useState(10);
   const [showResult, setShowResult] = useState(false);
   const [showResultData, setShowResultData] = useState(null);
   const timeRef = useRef(null);
@@ -29,7 +29,7 @@ const App = () => {
     setWords(shuffleWords(wordsList));
     setShowResult(false);
     setTimerStarted(false);
-    setTime(25);
+    setTime(10);
     setShowResultData(null);
     setStartTime(Date.now());
     clearInterval(timeRef.current);
