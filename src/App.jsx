@@ -1,17 +1,17 @@
-import React, { useState, useRef } from 'react';
-import './index.css';
-import Navbar from './component/Navbar';
-import Footer from './component/Footer';
-import Timer from './component/Timer';
-import InputBox from './component/InputBox';
-import Result from './component/Result';
-import Message from './component/Message';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useRef } from "react";
+import "./index.css";
+import Navbar from "./component/Navbar";
+import Footer from "./component/Footer";
+import Timer from "./component/Timer";
+import InputBox from "./component/InputBox";
+import Result from "./component/Result";
+import Message from "./component/Message";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
 const wordsList = [
-  'hello', 'world', 'this', 'is', 'a', 'test', 'for',
-  'keyClash', 'typing', 'texting', 'example', 'coding',
+  "hello", "world", "this", "is", "a", "test", "for",
+  "keyClash", "typing", "texting", "example", "coding",
 ];
 
 const App = () => {
@@ -23,10 +23,10 @@ const App = () => {
   const [timerStarted, setTimerStarted] = useState(false);
   const [startTime, setStartTime] = useState(null);
 
-  const shuffleWords = (word) => word.sort(() => Math.random() - 0.5);
+  const shuffleWords = (words) => [...words].sort(() => Math.random() - 0.5);
 
   const startTest = () => {
-    setWords(shuffleWords([...wordsList]));
+    setWords(shuffleWords(wordsList));
     setShowResult(false);
     setTimerStarted(false);
     setTime(25);
@@ -43,7 +43,6 @@ const App = () => {
         setTime((prevTime) => {
           if (prevTime <= 1) {
             clearInterval(timeRef.current);
-            handleComplete(0, 0, 0); // Call handleComplete with default values
             return 0;
           }
           return prevTime - 1;
@@ -54,7 +53,7 @@ const App = () => {
 
   const handleComplete = (correct, incorrect, total) => {
     clearInterval(timeRef.current);
-    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+    const elapsedTime = Math.max(1, Math.floor((Date.now() - startTime) / 1000)); // Avoid division by zero
     setShowResult(true);
     setShowResultData({ correct, incorrect, total, elapsedTime });
   };
@@ -63,7 +62,9 @@ const App = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
       <Navbar />
       <div className="flex-grow flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-8 text-blue-400">Enhance Your Typing Skills</h1>
+        <h1 className="text-3xl font-bold mb-8 text-blue-400">
+          Enhance Your Typing Skills
+        </h1>
         {!showResult ? (
           <div className="w-full max-w-3xl p-8 bg-gray-800 rounded-xl shadow-2xl flex flex-col gap-6">
             <Timer time={time} />

@@ -1,10 +1,17 @@
-Before Shuffling the words:
+Problem 1: ✔
     1. Speed is not showing.
     2. Correct/Incorrect problem.
 
 
 
-After shuffling the words:
+Problem 2: ✔
     1. Speed show correct.
     2. Incorrect/Contact works good.
 
+
+Problem 3: ✔
+    1. Result is not showing properly when time gets over while typing.
+
+
+Problem 4: ❌
+    1. Accuracy is not showing properly when I type complete before typing.

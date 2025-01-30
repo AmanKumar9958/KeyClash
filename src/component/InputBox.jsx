@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
   const [userInput, setUserInput] = useState("");
   const [correctCharacters, setCorrectCharacters] = useState(0);
   const [incorrectCharacters, setIncorrectCharacters] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [typingStopped, setTypingStopped] = useState(false);
+
+  useEffect(() => {
+    if (timeLeft === 0 && !typingStopped) {
+      setTypingStopped(true);
+      const totalChars = words.reduce((sum, word) => sum + word.length, 0);
+      onComplete(correctCharacters, incorrectCharacters, totalChars);
+    }
+  }, [timeLeft, typingStopped, correctCharacters, incorrectCharacters, onComplete, words]);
 
   const handleInputChange = (e) => {
+    if (timeLeft === 0) return; // Stop typing when time is over
+
     const inputValue = e.target.value;
     setUserInput(inputValue);
 
-    // Start the timer on the first key press
     if (inputValue.length === 1 && timeLeft > 0) {
       startTimer();
     }
@@ -20,7 +30,6 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
     let correctChars = 0;
     let incorrectChars = 0;
 
-    // Compare each character in the word
     for (let i = 0; i < currentWord.length; i++) {
       if (trimmedInput[i] === currentWord[i]) {
         correctChars++;
@@ -29,15 +38,14 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
       }
     }
 
-    // Add extra incorrect characters if the input is longer
     incorrectChars += Math.max(0, trimmedInput.length - currentWord.length);
 
     return { correctChars, incorrectChars };
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === " ") {
-      e.preventDefault(); // Prevent default space behavior
+    if (e.key === " " && timeLeft > 0) {
+      e.preventDefault();
 
       const trimmedInput = userInput.trim();
       const currentWord = words[currentWordIndex];
@@ -53,17 +61,10 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
       }
 
       const isLastWord = currentWordIndex + 1 >= words.length;
-      const finalCounts = trimmedInput.length > 0
-        ? calculateCharacterCounts(trimmedInput, currentWord)
-        : { correctChars: 0, incorrectChars: 0 };
 
-      if (isLastWord || timeLeft === 0) {
+      if (isLastWord) {
         const totalChars = words.reduce((sum, word) => sum + word.length, 0);
-        onComplete(
-          correctCharacters + finalCounts.correctChars,
-          incorrectCharacters + finalCounts.incorrectChars,
-          totalChars
-        );
+        onComplete(correctCharacters, incorrectCharacters, totalChars);
       }
 
       setCurrentWordIndex((prev) => prev + 1);
@@ -88,7 +89,7 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
         value={userInput}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        disabled={timeLeft === 0}
+        disabled={timeLeft === 0} // Disable input when time is over
         className="p-3 w-full bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors text-lg"
         placeholder="Start typing here..."
       />
