@@ -96,15 +96,19 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
   return (
     <div className="w-full">
       <div className="text-xl mb-6 text-gray-300 font-mono">
-        {words.map((word, index) => (
-          <span
-            key={index}
-            className={index === currentWordIndex ? "text-blue-400" : "text-gray-300"}
-          >
-            {word}{" "}
-          </span>
-        ))}
-      </div>
+  {words.length === 0 ? (
+    <p className="text-center">Loading words from API...</p> // Show loading message while words are being fetched
+  ) : (
+    words.map((word, index) => (
+      <span
+        key={index}
+        className={index === currentWordIndex ? "text-blue-400" : "text-gray-300"}
+      >
+        {word}{" "}
+      </span>
+    ))
+  )}
+</div>
       <input
         type="text"
         value={userInput}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./index.css";
 import Navbar from "./component/Navbar";
 import Footer from "./component/Footer";
@@ -9,15 +9,16 @@ import Message from "./component/Message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
-const wordsList = [
-  "DeepSeek", "hello", "world", "this", "is", "a", "test", "for",
-  "keyClash", "typing", "texting", "example", "coding",
-  "html", "css", "SAS", 'PHP', "React", "Docker", "GPT", "AI", "ML",
-  "DL", "Python", "JavaScript",
-];
+// const wordsList = [
+//   "DeepSeek", "hello", "world", "this", "is", "a", "test", "for",
+//   "keyClash", "typing", "texting", "example", "coding",
+//   "html", "css", "SAS", 'PHP', "React", "Docker", "GPT", "AI", "ML",
+//   "DL", "Python", "JavaScript",
+// ];
 
 const App = () => {
-  const [words, setWords] = useState(wordsList);
+  const [words, setWords] = useState([]);
+  const [currentWord, setCurrentWord] = useState("");
   const [time, setTime] = useState(35);
   const [showResult, setShowResult] = useState(false);
   const [showResultData, setShowResultData] = useState(null);
@@ -25,12 +26,43 @@ const App = () => {
   const [timerStarted, setTimerStarted] = useState(false);
   const [startTime, setStartTime] = useState(null);
 
-  const completionSound = new Audio("public/sounds/click_2.mp3");
+  const completionSound = new Audio("/sounds/click_2.mp3");
 
   const shuffleWords = (words) => [...words].sort(() => Math.random() - 0.5);
 
+  // random words
+  // key = 1GuaFiOFZO0XUf9Qozu9bA==1mwCnKVrYlSpeS6l
+  useEffect(() => {
+    const fetchWords = async (count) => {
+      const wordsArray = []; // Initialize an array to store words
+  
+      for (let i = 0; i < count; i++) {
+        try {
+          const response = await fetch("https://api.api-ninjas.com/v1/randomword", {
+            headers: { 'X-Api-Key': '1GuaFiOFZO0XUf9Qozu9bA==1mwCnKVrYlSpeS6l' },
+          });
+          const data = await response.json();
+          console.log("API Response:", data);
+  
+          if (data && data.word && data.word.length > 0) {
+            wordsArray.push(data.word[0]); // Add the fetched word to wordsArray
+          }
+        } catch (error) {
+          console.error("Error fetching word:", error);
+        }
+      }
+  
+      setWords(wordsArray); // Set the state to the final array of words
+    };
+  
+    fetchWords(15); // Fetch 10 words as an example
+  }, []);
+  
+  
+  
+
   const startTest = () => {
-    setWords(shuffleWords(wordsList));
+    setWords(shuffleWords(words));
     setShowResult(false);
     setTimerStarted(false);
     setTime(35);

@@ -15,3 +15,26 @@ Problem 3: ✔
 
 Problem 4: ✔
     1. Accuracy is not showing properly when I type complete before typing.
+
+
+
+
+
+
+useEffect(() => {
+    fetch("https://api.datamuse.com/words?rel_rhy=fun&max=30")  // Example to get random words
+      .then((res) => res.json())
+      .then((data) => {
+        const randomWords = data.map(item => item.word);
+        setWords(randomWords);
+        setCurrentWord(randomWords[0]);
+      })
+      .catch(() => {
+        const fallbackWords = ["DeepSeek", "hello", "world", "this", "is", "a", "test", "for",
+          "keyClash", "typing", "texting", "example", "coding",
+          "html", "css", "SAS", "PHP", "React", "Docker", "GPT", "AI", "ML",
+          "DL", "Python", "JavaScript"];
+        setWords(fallbackWords);
+        setCurrentWord(fallbackWords[0]);  // Ensure first word is set
+      });
+  }, []);
