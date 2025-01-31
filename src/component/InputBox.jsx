@@ -6,6 +6,7 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
   const [incorrectCharacters, setIncorrectCharacters] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [typingStopped, setTypingStopped] = useState(false);
+  const keypressSound = new Audio("public/sounds/click_2.mp3");
 
   useEffect(() => {
     if (timeLeft === 0 && !typingStopped) {
@@ -38,6 +39,7 @@ const InputBox = ({ timeLeft, words, onComplete, startTimer }) => {
     if (inputValue.length === 1 && timeLeft > 0) {
       startTimer();
     }
+    keypressSound.play().catch(() => {});
   };
 
   const calculateCharacterCounts = (trimmedInput, currentWord) => {

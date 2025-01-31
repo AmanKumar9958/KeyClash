@@ -10,18 +10,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
 const wordsList = [
-  "hello", "world", "this", "is", "a", "test", "for",
+  "DeepSeek", "hello", "world", "this", "is", "a", "test", "for",
   "keyClash", "typing", "texting", "example", "coding",
+  "html", "css", "SAS", 'PHP', "React", "Docker", "GPT", "AI", "ML",
+  "DL", "Python", "JavaScript",
 ];
 
 const App = () => {
   const [words, setWords] = useState(wordsList);
-  const [time, setTime] = useState(10);
+  const [time, setTime] = useState(35);
   const [showResult, setShowResult] = useState(false);
   const [showResultData, setShowResultData] = useState(null);
   const timeRef = useRef(null);
   const [timerStarted, setTimerStarted] = useState(false);
   const [startTime, setStartTime] = useState(null);
+
+  const completionSound = new Audio("public/sounds/click_2.mp3");
 
   const shuffleWords = (words) => [...words].sort(() => Math.random() - 0.5);
 
@@ -29,7 +33,7 @@ const App = () => {
     setWords(shuffleWords(wordsList));
     setShowResult(false);
     setTimerStarted(false);
-    setTime(10);
+    setTime(35);
     setShowResultData(null);
     setStartTime(Date.now());
     clearInterval(timeRef.current);
@@ -53,7 +57,8 @@ const App = () => {
 
   const handleComplete = (correct, incorrect, total) => {
     clearInterval(timeRef.current);
-    const elapsedTime = Math.max(1, Math.floor((Date.now() - startTime) / 1000)); // Avoid division by zero
+    completionSound.play().catch(() => {});
+    const elapsedTime = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
     setShowResult(true);
     setShowResultData({ correct, incorrect, total, elapsedTime });
   };
