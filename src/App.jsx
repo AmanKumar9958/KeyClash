@@ -36,7 +36,8 @@ const App = () => {
     const fetchWords = async () => {
       try {
         // Fetch all words from the API
-        const response = await fetch("https://679de442946b0e23c0620582.mockapi.io/random-words/words");
+        // const response = await fetch("https://679de442946b0e23c0620582.mockapi.io/random-words/words");
+        const response = await fetch("https://amankumar9958.github.io/random-words-api/words.json");
         const data = await response.json();
 
         // Check if data is an array and has content
