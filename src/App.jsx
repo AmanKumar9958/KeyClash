@@ -33,30 +33,32 @@ const App = () => {
   // random words
   // key = 1GuaFiOFZO0XUf9Qozu9bA==1mwCnKVrYlSpeS6l
   useEffect(() => {
-    const fetchWords = async (count) => {
-      const wordsArray = []; // Initialize an array to store words
-  
-      for (let i = 0; i < count; i++) {
-        try {
-          const response = await fetch("https://api.api-ninjas.com/v1/randomword", {
-            headers: { 'X-Api-Key': '1GuaFiOFZO0XUf9Qozu9bA==1mwCnKVrYlSpeS6l' },
-          });
-          const data = await response.json();
-          console.log("API Response:", data);
-  
-          if (data && data.word && data.word.length > 0) {
-            wordsArray.push(data.word[0]); // Add the fetched word to wordsArray
-          }
-        } catch (error) {
-          console.error("Error fetching word:", error);
+    const fetchWords = async () => {
+      try {
+        // Fetch all words from the API
+        const response = await fetch("https://679de442946b0e23c0620582.mockapi.io/random-words/words");
+        const data = await response.json();
+
+        // Check if data is an array and has content
+        if (Array.isArray(data) && data.length > 0) {
+          // Shuffle the array and pick the first 15 words
+          const selectedWords = data
+            .sort(() => 0.5 - Math.random()) // Shuffle array
+            .slice(0, 20); // Take the first 15 words
+
+          // Set the state with the selected words
+          setWords(selectedWords.map((item) => item.Word)); // Extract "Word" property
+        } else {
+          console.warn("No words found in API response.");
         }
+      } catch (error) {
+        console.error("Error fetching words:", error);
       }
-  
-      setWords(wordsArray); // Set the state to the final array of words
     };
-  
-    fetchWords(15); // Fetch 10 words as an example
+
+    fetchWords(); // Call the function
   }, []);
+  
   
   
   
