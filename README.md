@@ -26,10 +26,15 @@ Experience a clean and responsive interface, optimized for all devices.
 ## 🛠️ Technologies Used  
 
 - **React.js**: For building the user interface.  
-- **CSS**: For styling and layout.  
+- **Tailwind CSS**: For styling and layout.  
 - **JavaScript**: For implementing logic and functionality.  
 
 ---
+
+## 🛠️ API Used  
+
+- **MockAPI**: For generating random words.  
+
 
 ## 🙏 Acknowledgement
 Inspired by MonkeyType, a leading typing test platform.
