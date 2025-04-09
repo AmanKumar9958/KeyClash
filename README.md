@@ -23,6 +23,10 @@ Experience a clean and responsive interface, optimized for all devices.
 
 ---
 
+## 📸 Screenshot
+
+![Screenshot](https://github.com/AmanKumar9958/KeyClash/blob/main/public/ss.png?raw=true)
+
 ## 🛠️ Technologies Used  
 
 - **React.js**: For building the user interface.  
