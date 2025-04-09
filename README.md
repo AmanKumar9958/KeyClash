@@ -26,6 +26,7 @@ Experience a clean and responsive interface, optimized for all devices.
 ## 📸 Screenshot
 
 ![Screenshot](https://github.com/AmanKumar9958/KeyClash/blob/main/public/ss.png?raw=true)
+![Screenshot](https://github.com/AmanKumar9958/KeyClash/blob/main/public/ss2.png?raw=true)
 
 ## 🛠️ Technologies Used  
 
